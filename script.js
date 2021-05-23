@@ -1,6 +1,20 @@
-const ps = new PerfectScrollbar('#cells');
-function calcColName(n) {
+
+const PS = new PerfectScrollbar("#cells", {
+    wheelSpeed: 12,
+    wheelPropagation: true,
+});
+
+function findRowCOl(ele) {
+    let idArray = $(ele).attr("id").split("-");
+    let rowId = parseInt(idArray[1]);
+    let colId = parseInt(idArray[3]);
+    return [rowId, colId];
+}
+
+for (let i = 1; i <= 100; i++) {
     let str = "";
+    let n = i;
+
     while (n > 0) {
         let rem = n % 26;
         if (rem == 0) {
@@ -11,14 +25,10 @@ function calcColName(n) {
             n = Math.floor((n / 26));
         }
     }
-    return str;
-}
-
-for (let i = 1; i <= 100; i++) {
-    let str = calcColName(i);
     $("#columns").append(`<div class="column-name">${str}</div>`);
     $("#rows").append(`<div class="row-name">${i}</div>`);
 }
+
 for (let i = 1; i <= 100; i++) {
     let row = $('<div class="cell-row"></div>');
     for (let j = 1; j <= 100; j++) {
@@ -42,12 +52,6 @@ $(".input-cell").blur(function () {
 });
 
 
-function findRowCOl(ele) {
-    let idArray = $(ele).attr("id").split("-");
-    let rowId = parseInt(idArray[1]);
-    let colId = parseInt(idArray[3]);
-    return [rowId, colId];
-}
 function getTopBottomLeftRightCell(rowId, colId) {
     let topCell = $(`#row-${rowId - 1}-col-${colId}`);
     let bottomCell = $(`#row-${rowId + 1}-col-${colId}`);
@@ -55,7 +59,6 @@ function getTopBottomLeftRightCell(rowId, colId) {
     let rightCell = $(`#row-${rowId}-col-${colId + 1}`);
     return [topCell, bottomCell, leftCell, rightCell];
 }
-
 $(".input-cell").click(function (e) {
     let [rowId, colId] = findRowCOl(this);
     let [topCell, bottomCell, leftCell, rightCell] = getTopBottomLeftRightCell(rowId, colId);
@@ -68,7 +71,6 @@ $(".input-cell").click(function (e) {
     }
 
 });
-
 
 function unselectCell(ele, e, topCell, bottomCell, leftCell, rightCell) {
     if (e.ctrlKey && $(ele).attr("contenteditable") == "false") {
@@ -138,4 +140,63 @@ function selectCell(ele, e, topCell, bottomCell, leftCell, rightCell, mouseSelec
 
     $(ele).addClass("selected");
 }
+let mousemoved = false;
+let startCellStored = false;
+let startCell;
+let endCell;
+$(".input-cell").mousemove(function (event) {
+    event.preventDefault();
+    if (event.buttons == 1 && !event.ctrlKey) {
+        $(".input-cell.selected").removeClass("selected top-selected bottom-selected right-selected left-selected");
+        mousemoved = true;
+        if(!startCellStored) {
+            let [rowId, colId] = findRowCOl(event.target);
+            startCell = { rowId: rowId, colId: colId };
+            startCellStored = true;
+        } else {
+            let [rowId, colId] = findRowCOl(event.target);
+            endCell = { rowId: rowId, colId: colId };
+            selectAllBetweenTheRange(startCell, endCell);
+        }
+    } else if (event.buttons == 0 && mousemoved) {
+        startCellStored = false;
+        mousemoved = false;
+    }
+})
 
+function selectAllBetweenTheRange(start, end) {
+    for (let i = (start.rowId < end.rowId ? start.rowId : end.rowId); i <= (start.rowId < end.rowId ? end.rowId : start.rowId); i++) {
+        for (let j = (start.colId < end.colId ? start.colId : end.colId); j <= (start.colId < end.colId ? end.colId : start.colId); j++) {
+            let [topCell, bottomCell, leftCell, rightCell] = getTopBottomLeftRightCell(i, j);
+            selectCell($(`#row-${i}-col-${j}`)[0], {}, topCell, bottomCell, leftCell, rightCell, true);
+        }
+    }
+}
+
+$("#bold").click(function(e) {
+    if($(this).hasClass("selected")) {
+        $(this).removeClass("selected");
+        $(".input-cell.selected").each(function(index,ele){
+            $(ele).html(`${$(ele).text()}`);
+        });
+    } else {
+        $(this).addClass("selected");
+        $(".input-cell.selected").each(function(index,ele){
+            $(ele).html(`<b>${$(ele).text()}</b>`);
+        });
+    }
+});
+
+$("#italic").click(function(e) {
+    if($(this).hasClass("selected")) {
+        $(this).removeClass("selected");
+        $(".input-cell.selected").each(function(index,ele){
+            $(ele).html(`${$(ele).text()}`);
+        });
+    } else {
+        $(this).addClass("selected");
+        $(".input-cell.selected").each(function(index,ele){
+            $(ele).html(`<i>${$(ele).text()}</i>`);
+        });
+    }
+});
