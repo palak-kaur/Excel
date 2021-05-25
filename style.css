@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     overflow: hidden;
@@ -13,7 +12,6 @@ body {
     width: 100vw;
     background-color: #fff;
     color: #444;
-    position: relative;
 }
 
 .title-bar {
@@ -138,7 +136,7 @@ body {
 
 .data-container {
     display: flex;
-    height: 75vh;
+    height: 76vh;
     flex-wrap: wrap;
     flex-direction: row;
     width: 100vw;
@@ -160,17 +158,22 @@ body {
 
 #rows {
     width: 25px;
-    height: calc(75vh - 25px);
+    height: calc(76vh - 25px);
     border: 1px solid lightgray;
     overflow: hidden;
 }
 
 #cells {
     position: relative;
-    height: calc(75vh - 25px);
+    height: calc(76vh - 25px);
     width: calc(100vw - 25px);
     border: 1px solid lightgray;
     overflow: scroll;
+}
+
+.sheet-bar {
+    height: 3vh;
+    width: 100vw;
 }
 
 .column-name {
@@ -208,7 +211,7 @@ body {
     padding-right: 3px;
     overflow: hidden;
     font-size: 14px;
-    font-family: Arial;
+    font-family: Noto Sans;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -238,3 +241,27 @@ body {
 .menu-icon.selected {
     background-color: lightgray;
 }
+
+#fill-color-icon {
+    border-bottom: 4px solid #fff;
+    padding-bottom: 2px;
+}
+
+#text-color-icon {
+    border-bottom: 4px solid #444;
+    padding-bottom: 2px;
+}
+
+.colorPickSelector {
+    border-radius: 5px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    -webkit-transition: all linear .2s;
+    -moz-transition: all linear .2s;
+    -ms-transition: all linear .2s;
+    -o-transition: all linear .2s;
+    transition: all linear .2s;
+  }
+  
+  .colorPickSelector:hover { transform: scale(1.1); }

@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet" />
-    <link rel="stylesheet" href="perfect-scrollbar-master/css/perfect-scrollbar.css">
-    <link rel = "stylesheet" href = "style.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="./perfect-scrollbar-master/css/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./Flat-HTML5-Palette-Color-Picker-For-jQuery-colorPick-js/src/colorPick.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>Excel</title>
+    <title>Excel Clone</title>
 </head>
 
 <body>
-   
     <div class="container">
         <div class="title-bar">Book-1 Excel</div>
         <div class="menu-bar">
@@ -26,9 +27,9 @@
             <div class="material-icons menu-icon">content_cut</div>
             <div class="material-icons menu-icon">content_copy</div>
             <div class="material-icons menu-icon">content_paste</div>
-            <select class="menu-selector"  id = "font-family">
-                <option style = "font-family : Noto Sans" value="Noto Sans">Noto Sans</option>
-                <option style="font-family:Arial" value="Arial" selected = "true">Arial</option>
+            <select class="menu-selector" id="font-family">
+                <option style="font-family: Noto Sans;" value="Noto Sans">Noto Sans</option>
+                <option style="font-family:Arial" value="Arial">Arial</option>
                 <option style="font-family:Calibri" value="Calibri">Calibri</option>
                 <option style="font-family:Comic Sans MS" value="Comic Sans MS">Comic Sans MS</option>
                 <option style="font-family:Courier New" value="Courier New">Courier New</option>
@@ -40,10 +41,10 @@
                 <option style="font-family:Palatino" value="Palatino">Palatino</option>
                 <option style="font-family:Verdana" value="Verdana">Verdana</option>
             </select>
-            <select class="menu-selector" id = "font-size">
+            <select class="menu-selector" id="font-size">
                 <option value="10">10</option>
                 <option value="12">12</option>
-                <option value="14" selected = "true">14</option>
+                <option value="14" selected="true">14</option>
                 <option value="16">16</option>
                 <option value="18">18</option>
                 <option value="20">20</option>
@@ -54,18 +55,18 @@
                 <option value="30">30</option>
                 <option value="32">32</option>
             </select>
-            <div class="material-icons menu-icon" id = "bold">format_bold</div>
+            <div class="material-icons menu-icon" id="bold">format_bold</div>
             <div class="material-icons menu-icon" id="italic">format_italic</div>
-            <div class="material-icons menu-icon" id = "underline">format_underline</div>
-            <div class="material-icons menu-icon">format_color_text</div>
-            <div class="material-icons menu-icon">format_color_fill</div>
-            <div class="material-icons menu-icon">format_align_left</div>
-            <div class="material-icons menu-icon">format_align_center</div>
-            <div class="material-icons menu-icon">format_align_right</div>
+            <div class="material-icons menu-icon" id="underlined">format_underlined</div>
+            <div class="material-icons menu-icon color-pick" id="fill-color"><img id="fill-color-icon" src="https://img.icons8.com/material-sharp/20/000000/fill-color.png"/></div>
+            <div class="material-icons menu-icon color-pick" id="text-color"><img id="text-color-icon" src="https://img.icons8.com/ios-filled/20/000000/generic-text-filled.png"/></div>
+            <div class="material-icons menu-icon alignment selected" data-type="left">format_align_left</div>
+            <div class="material-icons menu-icon alignment" data-type="center">format_align_center</div>
+            <div class="material-icons menu-icon alignment" data-type="right">format_align_right</div>
         </div>
         <div class="formula-bar">
-            <div class = "formula-editor" id="selected-cell" contenteditable="true"></div>
-            <div id="function-sign" >
+            <div class="formula-editor" id="selected-cell" contenteditable="true"></div>
+            <div id="function-sign">
                 <svg class="[object SVGAnimatedString] ewa-svg-icon" focusable="false" viewBox="0,0,2048,2048"
                     style="height: 1rem; width: 1rem;">
                     <title>Insert Function</title>
@@ -77,18 +78,22 @@
                     </path>
                 </svg>
             </div>
-            <div class = "formula-editor" id="function-input" contenteditable="true"></div>
+            <div class="formula-editor" id="function-input" contenteditable="true"></div>
         </div>
         <div class="data-container">
             <div id="select-all"></div>
-            <div id="columns"></div>
-            <div id="rows"></div>
-            <div id="cells"></div>
+            <div id="columns">
+            </div>
+            <div id="rows">
+            </div>
+            <div id="cells">
+            </div>
         </div>
         <div class="sheet-bar"></div>
     </div>
-    
+    <script src="./Flat-HTML5-Palette-Color-Picker-For-jQuery-colorPick-js/src/colorPick.js"></script>
     <script src="perfect-scrollbar-master/dist/perfect-scrollbar.js"></script>
-    <script src = "script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>

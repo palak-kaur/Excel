@@ -1,4 +1,3 @@
-
 const PS = new PerfectScrollbar("#cells", {
     wheelSpeed: 12,
     wheelPropagation: true,
@@ -29,11 +28,26 @@ for (let i = 1; i <= 100; i++) {
     $("#rows").append(`<div class="row-name">${i}</div>`);
 }
 
+let cellData = [];
+
 for (let i = 1; i <= 100; i++) {
     let row = $('<div class="cell-row"></div>');
+    let rowArray = [];
     for (let j = 1; j <= 100; j++) {
         row.append(`<div id="row-${i}-col-${j}" class="input-cell" contenteditable="false"></div>`);
+        rowArray.push({
+            "font-family": "Noto Sans",
+            "font-size": 14,
+            "text": "",
+            "bold": false,
+            "italic": false,
+            "underlined": false,
+            "alignment": "left",
+            "color": "#444",
+            "bgcolor": "#fff"
+        });
     }
+    cellData.push(rowArray);
     $("#cells").append(row);
 }
 
@@ -139,7 +153,31 @@ function selectCell(ele, e, topCell, bottomCell, leftCell, rightCell, mouseSelec
     }
 
     $(ele).addClass("selected");
+    changeHeader(findRowCOl(ele));
 }
+
+function changeHeader([rowId, colId]) {
+    let data = cellData[rowId - 1][colId - 1];
+    $("#font-family").val(data["font-family"]);
+    $("#font-family").css("font-family",data["font-family"]);
+    $("#font-size").val(data["font-size"]);
+    $(".alignment.selected").removeClass("selected");
+    $(`.alignment[data-type=${data.alignment}]`).addClass("selected");
+    addRemoveSelectFromFontStyle(data, "bold");
+    addRemoveSelectFromFontStyle(data, "italic");
+    addRemoveSelectFromFontStyle(data, "underlined");
+    $("#fill-color-icon").css("border-bottom",`4px solid ${data.bgcolor}`);
+    $("#text-color-icon").css("border-bottom",`4px solid ${data.color}`);
+}
+
+function addRemoveSelectFromFontStyle(data, property) {
+    if (data[property]) {
+        $(`#${property}`).addClass("selected");
+    } else {
+        $(`#${property}`).removeClass("selected");
+    }
+}
+
 let mousemoved = false;
 let startCellStored = false;
 let startCell;
@@ -149,7 +187,7 @@ $(".input-cell").mousemove(function (event) {
     if (event.buttons == 1 && !event.ctrlKey) {
         $(".input-cell.selected").removeClass("selected top-selected bottom-selected right-selected left-selected");
         mousemoved = true;
-        if(!startCellStored) {
+        if (!startCellStored) {
             let [rowId, colId] = findRowCOl(event.target);
             startCell = { rowId: rowId, colId: colId };
             startCellStored = true;
@@ -173,30 +211,92 @@ function selectAllBetweenTheRange(start, end) {
     }
 }
 
-$("#bold").click(function(e) {
-    if($(this).hasClass("selected")) {
-        $(this).removeClass("selected");
-        $(".input-cell.selected").each(function(index,ele){
-            $(ele).html(`${$(ele).text()}`);
+$(".menu-selector").change(function (e) {
+    let value = $(this).val();
+    let key = $(this).attr("id");
+    if(key == "font-family") {
+        $("#font-family").css(key,value);
+    }
+    if (!isNaN(value)) {
+        value = parseInt(value);
+    }
+    $(".input-cell.selected").css(key, value);
+    $(".input-cell.selected").each(function (index, data) {
+        let [rowId, colId] = findRowCOl(data);
+        cellData[rowId - 1][colId - 1][key] = value;
+    });
+})
+
+$(".alignment").click(function (e) {
+    $(".alignment.selected").removeClass("selected");
+    $(this).addClass("selected");
+    let alignment = $(this).attr("data-type");
+    $(".input-cell.selected").css("text-align", alignment);
+    $(".input-cell.selected").each(function (index, data) {
+        let [rowId, colId] = findRowCOl(data);
+        cellData[rowId - 1][colId - 1].alignment = alignment;
+    });
+});
+
+$("#bold").click(function (e) {
+    setFontStyle(this, "bold", "font-weight", "bold");
+});
+
+$("#italic").click(function (e) {
+    setFontStyle(this, "italic", "font-style", "italic");
+});
+
+$("#underlined").click(function (e) {
+    setFontStyle(this, "underlined", "text-decoration", "underline");
+});
+
+function setFontStyle(ele, property, key, value) {
+    if ($(ele).hasClass("selected")) {
+        $(ele).removeClass("selected");
+        $(".input-cell.selected").css(key, "");
+        $(".input-cell.selected").each(function (index, data) {
+            let [rowId, colId] = findRowCOl(data);
+            cellData[rowId - 1][colId - 1][property] = false;
         });
     } else {
-        $(this).addClass("selected");
-        $(".input-cell.selected").each(function(index,ele){
-            $(ele).html(`<b>${$(ele).text()}</b>`);
+        $(ele).addClass("selected");
+        $(".input-cell.selected").css(key, value);
+        $(".input-cell.selected").each(function (index, data) {
+            let [rowId, colId] = findRowCOl(data);
+            cellData[rowId - 1][colId - 1][property] = true;
         });
+    }
+}
+
+$(".color-pick").colorPick({
+    'initialColor': '#TYPECOLOR',
+    'allowRecent': true,
+    'recentMax': 5,
+    'allowCustomColor': true,
+    'palette': ["#1abc9c", "#16a085", "#2ecc71", "#27ae60", "#3498db", "#2980b9", "#9b59b6", "#8e44ad", "#34495e", "#2c3e50", "#f1c40f", "#f39c12", "#e67e22", "#d35400", "#e74c3c", "#c0392b", "#ecf0f1", "#bdc3c7", "#95a5a6", "#7f8c8d"],
+    'onColorSelected': function () {
+        if (this.color != "#TYPECOLOR") {
+            if(this.element.attr("id") == "fill-color") {
+                $("#fill-color-icon").css("border-bottom",`4px solid ${this.color}`);
+                $(".input-cell.selected").css("background-color",this.color);
+                $(".input-cell.selected").each((index,data) => {
+                    let [rowId,colId] = findRowCOl(data);
+                    cellData[rowId-1][colId-1].bgcolor = this.color;
+                });
+            } else {
+                $("#text-color-icon").css("border-bottom",`4px solid ${this.color}`);
+                $(".input-cell.selected").css("color",this.color);
+                $(".input-cell.selected").each((index,data) => {
+                    let [rowId,colId] = findRowCOl(data);
+                    cellData[rowId-1][colId-1].color = this.color;
+                });
+            }
+        }
     }
 });
 
-$("#italic").click(function(e) {
-    if($(this).hasClass("selected")) {
-        $(this).removeClass("selected");
-        $(".input-cell.selected").each(function(index,ele){
-            $(ele).html(`${$(ele).text()}`);
-        });
-    } else {
-        $(this).addClass("selected");
-        $(".input-cell.selected").each(function(index,ele){
-            $(ele).html(`<i>${$(ele).text()}</i>`);
-        });
-    }
+$("#fill-color-icon,#text-color-icon").click(function(e) {
+    setTimeout(() => {
+        $(this).parent().click(); 
+    }, 10);
 });
