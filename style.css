@@ -256,7 +256,7 @@ body {
 }
 
 .sheet-scroller {
-    margin-right: 20px;
+    margin-right: 10px;
     display: flex;
     align-items: center;
 }
@@ -265,6 +265,7 @@ body {
     margin-right: 10px;
     display: flex;
     border-left: 0.5px solid lightgray;
+    overflow: scroll;
 }
 
 .sheet-tab {
@@ -295,6 +296,7 @@ body {
 
 .add-sheet {
     color: #217346;
+    margin-right: 10px;
 }
 
 .add-sheet:hover, .scroller:hover {
@@ -377,6 +379,7 @@ body {
     justify-content: space-evenly;
     padding: 15px;
 }
+
 .button {
     border: 1px solid;
     width: 100px;
@@ -415,4 +418,85 @@ body {
 
 .delete-icon {
     margin-right: 5px;
+}
+
+.loader-parent {
+    background-color: rgba(255, 255, 255, 0.5);
+    flex-direction: column;
+}
+
+.loading {
+    font-size: 30px;
+    color: #217346;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
+}
+
+.sheet-tab-container::-webkit-scrollbar {
+    display: none;
+}
+
+.sheet-tab-container {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.file-modal {
+    position: absolute;
+    top: 0;
+    left:0;
+    height: 100vh;
+    width: 0vw;
+    display: flex;
+}
+
+.file-options-modal {
+    width: 12rem;
+    background-color: #217346;
+    height: 100%;
+    color: #fff;
+}
+
+.file-recent-modal {
+    background-color: #fff;
+    height: 100%;
+    width: calc(50% - 12rem);
+}
+
+.close, .new, .open, .save {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    font-size: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.close-icon, .new-icon, .save-icon, .open-icon {
+    position: absolute;
+    left: 2rem;
+}
+
+.close {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.close-icon {
+    transform: rotate(90deg);
+}
+
+.close:hover, .new:hover, .save:hover, .open:hover {
+    background-color: #1c683e;
+    cursor: pointer;
+}
+
+.file-transparent-modal {
+    width: 50%;
+    height: 100%;
 }
